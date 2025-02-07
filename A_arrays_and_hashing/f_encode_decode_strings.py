@@ -3,7 +3,7 @@
 class Solution:
     # The main idea is to encode S1, S2, ..., Sn in the format <sizeofS1>#S1<sizeofS2>#S2....
     # Decoding is done in similar reverse manner
-    # T: O(n) for encoding & decoding
+    # T: O(m) for encoding & decoding where m is sum of lengths of all the strings
     # S: O(1) for encoding & decoding (not including final string)
     def encode(self, strs: List[str]) -> str:
         res = ""
