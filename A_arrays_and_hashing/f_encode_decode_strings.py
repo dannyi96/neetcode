@@ -1,4 +1,5 @@
 # Leetcode link - https://leetcode.com/problems/encode-and-decode-strings/
+from typing import *
 
 class Solution:
     # The main idea is to encode S1, S2, ..., Sn in the format <sizeofS1>#S1<sizeofS2>#S2....
