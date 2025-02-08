@@ -24,3 +24,38 @@ class Solution:
     # Note - above 2 solutions would work for even non sorted scenario.
     # We need to come up with better solutions for sorted usecases
     
+    # Binary Search based -> T: O(nlogn), S: O(1)
+    def twoSum_binary_search(self, numbers: List[int], target: int) -> List[int]:
+        # Basic idea - for each elem in numbers, do a binary search for its complement
+        def binary_search(l: int, r: int, goal: int) -> int:
+            while l <= r:
+                mid = l + (r-l)//2
+                if numbers[mid] == goal:
+                    return mid
+                elif numbers[mid] < goal:
+                    l = mid + 1
+                else:
+                    r = mid - 1
+            return -1
+        
+        n = len(numbers)
+        for index, elem in enumerate(numbers):
+            complement = target - elem
+            search_index = binary_search(index+1, n-1, complement)
+            if search_index != -1:
+                return [index + 1, search_index + 1] # output is expected in 1 index format
+        return []
+    
+    # Two pointer based -> T: O(n), S: O(1)
+    def twoSum_two_pointer(self, numbers: List[int], target: int) -> List[int]:
+        l, r = 0, len(numbers) - 1
+        
+        while l < r:
+            curSum = numbers[l] + numbers[r]
+            if curSum == target:
+                return [l+1, r+1] # output is expected in 1 index format
+            elif curSum < target:
+                l += 1
+            else:
+                r -= 1
+        return []
