@@ -48,4 +48,35 @@ class Solution:
 
         return res
                     
-    
+    # Two Pointer based -> T: O(n^2), S: O(1) / O(n) based on sorting algorithm
+    def threeSum_two_pointer(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        nums.sort()
+
+        res = []
+        for i, a in enumerate(nums):
+            # If number is +ve(post sorting), no chance to get three sum as 0. Hence early quit
+            if a > 0:
+                break
+
+            # Handling duplicates - 1st number
+            if i > 0 and a == nums[i - 1]:
+                continue
+
+            # Rest of the problem -> treated as a sorted array 2 sum problem
+            l, r = i + 1, n - 1
+            while l < r:
+                threeSum = a + nums[l] + nums[r]
+                if threeSum > 0:
+                    r -= 1
+                elif threeSum < 0:
+                    l += 1
+                else:
+                    res.append([a, nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    # Handling duplicates - 2nd number
+                    while nums[l] == nums[l - 1] and l < r:
+                        l += 1
+                        
+        return res
