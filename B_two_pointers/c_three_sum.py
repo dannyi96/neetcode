@@ -1,5 +1,6 @@
 # Leetcode link - https://leetcode.com/problems/3sum/
 from typing import *
+from collections import Counter
 
 # Key points
 # - we need to return the list of numbers and not the indices
@@ -18,4 +19,33 @@ class Solution:
                         res.add(tuple(tmp))
         return [list(i) for i in res]
     
+    # Counter Hashmap based -> T: O(n^2), S: O(n)
+    def threeSum_hashmap(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        nums.sort() # To help in duplicate handling
+        counterMap = Counter(nums) # Compute counter map
+        
+        res = []
+        for i in range(n):
+            counterMap[nums[i]] -= 1
+            # For skipping duplicates
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            
+            for j in range(i+1, n):
+                counterMap[nums[j]] -= 1
+                # For skipping duplicates
+                if j - 1 > i and nums[j] == nums[j - 1]:
+                    continue
+                target = -(nums[i] + nums[j])
+                # default val for Counter for key is not present is 0
+                if counterMap[target] > 0:
+                    res.append([nums[i], nums[j], target])
+
+            # Readd data from [j...n-1] back to counter map
+            for j in range(i + 1, len(nums)):
+                counterMap[nums[j]] += 1
+
+        return res
+                    
     
