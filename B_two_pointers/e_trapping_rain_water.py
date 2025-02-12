@@ -61,4 +61,22 @@ class Solution:
 
         return res
     
-    
+    # Two Pointer Based. T: O(n), S: O(1)
+    def trap_two_pointers(self, height: List[int]) -> int:
+        # Expanding from the intuition of the prefix, suffix array method
+        # Key insight to understand the two pointer ---> min(highL, highR) - height 
+        # This can be achieved by two pointers approach
+        l, r = 0, len(height) - 1
+        leftMaxHeight, rightMaxHeight = height[0], height[-1] # Heights at left & right extreme can be ignored for final answer
+        res = 0
+        
+        while l < r:
+            if leftMaxHeight < rightMaxHeight:
+                l += 1
+                leftMaxHeight = max(leftMaxHeight, height[l])
+                res += leftMaxHeight - height[l]
+            else:
+                r -= 1
+                rightMaxHeight = max(rightMaxHeight, height[r])
+                res += rightMaxHeight - height[r]
+        return res
