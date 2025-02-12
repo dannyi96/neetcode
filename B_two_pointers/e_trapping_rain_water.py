@@ -51,12 +51,14 @@ class Solution:
             while stack and cur_height >= height[stack[-1]]:
                 mid = height[stack.pop()]
                 if stack:
-                    right = height
+                    right = cur_height
                     left = height[stack[-1]]
                     h = min(left, right) - mid
                     w = index - stack[-1] - 1
                     res += h * w
             # Store the index of height in stack
             stack.append(index)
+
+        return res
     
     
