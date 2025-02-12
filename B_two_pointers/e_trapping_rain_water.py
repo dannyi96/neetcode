@@ -41,6 +41,22 @@ class Solution:
             res += min(leftMax[i], rightMax[i]) - height[i]
         return res
 
-    # Stack based. T: O(n), S: O(n)
-    def trap_stack(self, height: List[int]) -> int:
-        pass
+    # Monotonic Stack based. T: O(n), S: O(n)
+    def trap_monotonic_stack(self, height: List[int]) -> int:
+        stack = [] # We maintain a non increasing monotonic stack
+        res = 0
+        
+        for index, cur_height in enumerate(height):
+            # as long as current height exceeds top of stack
+            while stack and cur_height >= height[stack[-1]]:
+                mid = height[stack.pop()]
+                if stack:
+                    right = height
+                    left = height[stack[-1]]
+                    h = min(left, right) - mid
+                    w = index - stack[-1] - 1
+                    res += h * w
+            # Store the index of height in stack
+            stack.append(index)
+    
+    
