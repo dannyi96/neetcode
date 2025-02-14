@@ -12,6 +12,19 @@ class Solution:
                 res = max(res, sell - buy)
         return res
     
-    # Bruteforce. T:O(n^2), S: O(1)
+    # Bruteforce. T:O(n), S: O(1)
     def maxProfit_two_pointers(self, prices: List[int]) -> int:
-        pass
+        n = len(prices)
+        l, r = 0, 1
+        res = 0
+        
+        while r < n:
+            if prices[r] > prices[l]:
+                profit = prices[r] - prices[l]
+                res = max(res, profit)
+            else:
+                # Reset
+                l = r
+            r += 1
+        
+        return res
