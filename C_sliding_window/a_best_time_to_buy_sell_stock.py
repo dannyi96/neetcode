@@ -12,7 +12,7 @@ class Solution:
                 res = max(res, sell - buy)
         return res
     
-    # Bruteforce. T:O(n), S: O(1)
+    # Two Pointer based. T:O(n), S: O(1)
     def maxProfit_two_pointers(self, prices: List[int]) -> int:
         n = len(prices)
         l, r = 0, 1
@@ -28,3 +28,15 @@ class Solution:
             r += 1
         
         return res
+    
+    # DP based. T:O(n), S: O(1)
+    def maxProfit_dp(self, prices: List[int]) -> int:
+        maxProfit = 0
+        minBuy = prices[0]
+        
+        for sell in prices:
+            profit = sell - minBuy
+            maxProfit = max(maxProfit, profit)
+            minBuy = min(minBuy, sell)
+        
+        return maxProfit
