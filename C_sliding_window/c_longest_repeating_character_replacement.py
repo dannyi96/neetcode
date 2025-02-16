@@ -15,3 +15,24 @@ class Solution:
                 if (j - i + 1) - maxf <= k:
                     res = max(res, j - i + 1)
         return res
+    
+    # Sliding window optimised (more intuitive). T: O(n), S: O(m)
+    def characterReplacement_sliding_window_optimised(self, s: str, k: int) -> int:
+        count = {}
+        res = 0
+        maxF = 0
+        
+        l = 0
+        for r in range(len(s)):
+            # update counter & max frequent character
+            count[s[r]] = count.get(s[r], 0) + 1
+            maxF = max(maxF, count[s[r]])
+            
+            # if windows exceeds constraint, update l accordingly
+            while (r - l + 1) - maxF > k:
+                count[s[l]] -= 1
+                l += 1
+            
+            res = max(res, r-l+1)
+        
+        return res
