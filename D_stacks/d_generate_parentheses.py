@@ -61,4 +61,17 @@ class Solution:
         backtrack(0, 0)
         return res
     
-    # DP based. TODO
+    # DP based.
+    # T: O(4^n / sqrt(n)) [number of valid sequences(Catalan number)]
+    # S: O(4^n / sqrt(n)) ( storing output) ( no recursion space )
+    def generateParenthesis_dp(self, n: int) -> List[str]:
+        res = [[] for _ in range(n+1)]  # DP table, where res[k] stores valid sequences for k pairs
+        res[0] = [""]  # Base case: One way to have 0 pairs (empty string)
+
+        for k in range(n + 1):  # Compute results for k pairs
+            for i in range(k):  # i is the number of pairs inside the first '(' and ')'
+                for left in res[i]:  # Get valid sequences for i pairs
+                    for right in res[k-i-1]:  # Get valid sequences for remaining k-i-1 pairs
+                        res[k].append("(" + left + ")" + right)  # Form a valid sequence
+        
+        return res[-1]  # Return results for n pairs
