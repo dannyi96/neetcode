@@ -27,7 +27,19 @@ class Solution:
         dfs("")
         return res
 
-    # Backtracking based. TODO
+    # Backtracking based - backtrack immediately once invalid encountered
+    # T: O(4^n / sqrt(n)) [number of valid sequences(Catalan number)]
+    # S: O(n) (Recursion space) + O(4^n / sqrt(n)) ( storing output)
+    '''
+        Understanding the time & space complexity
+        The number of valid sequences follows the Catalan number, which counts the number of valid ways to arrange balanced parentheses:
+            Catalan(n) = (2n C n) / (n+1) = (2n)!/(n+1)!n!
+        Using Stirling's approximation for factorial growth:
+            Catalan(n) ~ 4^n / ( n^(3/2) * pi^(1/2) )
+ 
+        Thus, the number of recursive calls, 
+            which is proportional to Catalan(n) is upper-bounded by -> O(4^n / sqrt(n))
+    '''
     def generateParenthesis_backtrack(self, n: int) -> List[str]:
         stack = []
         res = []
