@@ -21,3 +21,20 @@ class Solution:
             days = 0 if j == n else days
             res.append(days)
         return res
+    
+    # Monotonic stack. T: O(n), S: O(n)
+    def dailyTemperatures_stack(self, temperatures: List[int]) -> List[int]:
+        n = len(temperatures)
+        res = [0] * n
+        stack = [] # pair: [temp, index]
+        
+        for index, temp in enumerate(temperatures):
+            # If scenario, we are interested in hits, we keep poping and do the needed
+            while stack and temp > stack[-1][0]:
+                _, poppedIndex = stack.pop()
+                res[poppedIndex] = index - poppedIndex
+            
+            # Normally, we push to stack
+            stack.append((temp, index))
+
+        return res
