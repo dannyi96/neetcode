@@ -224,11 +224,10 @@
     print(arr)
 
 
-Best for General Use (Balanced Time & Space Complexity)
+🏆 Best General Sorting Algorithm (Time + Space Balanced)
 ➡ Merge Sort vs Quick Sort vs Heap Sort
+➡ Merge Sort (O(n log n) time, O(n) space), not in-place, is stable – Best if stability is required.
+➡ Quick Sort (O(n log n) time, O(log n) space), in-place, not stable – Best for general-purpose sorting.
+➡ Heap Sort (O(n log n) time, O(1) space), in-place, not stable  – Best when memory is constrained.
 
-Merge Sort: ✅ O(n log n) time, ❌ O(n) space (not in-place)
-Quick Sort: ✅ O(n log n) time (average), ✅ O(log n) space (in-place)
-Heap Sort: ✅ O(n log n) time, ✅ O(1) space, but ❌ not stable
-🔹 Winner: Quick Sort (for in-place sorting, when optimized with good pivot selection like median-of-three or random pivot selection).
-🔹 Winner: Merge Sort (if stability is needed and extra space is not an issue).
+If space is not an issue and stability is required, go with Merge Sort. Otherwise, Quick Sort is usually the best practical choice when optimized well. 🚀
