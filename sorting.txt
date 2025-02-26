@@ -222,3 +222,13 @@
     arr = [170, 45, 75, 90, 802, 24, 2, 66]
     radix_sort(arr)
     print(arr)
+
+
+Best for General Use (Balanced Time & Space Complexity)
+➡ Merge Sort vs Quick Sort vs Heap Sort
+
+Merge Sort: ✅ O(n log n) time, ❌ O(n) space (not in-place)
+Quick Sort: ✅ O(n log n) time (average), ✅ O(log n) space (in-place)
+Heap Sort: ✅ O(n log n) time, ✅ O(1) space, but ❌ not stable
+🔹 Winner: Quick Sort (for in-place sorting, when optimized with good pivot selection like median-of-three or random pivot selection).
+🔹 Winner: Merge Sort (if stability is needed and extra space is not an issue).
