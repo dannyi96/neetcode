@@ -1,0 +1,173 @@
+Mutex Locks in Python (threading.Lock, threading.RLock, threading.Semaphore)
+Mutex (Mutual Exclusion) locks prevent race conditions when multiple threads access shared resources. Python provides different types of locks for managing concurrency.
+
+1. Basic Mutex Lock (threading.Lock)
+    A mutex (Lock) ensures that only one thread at a time can access a shared resource.
+
+    Example: Preventing Race Conditions with Lock
+
+    import threading
+
+    counter = 0
+    lock = threading.Lock()
+
+    def increment():
+        global counter
+        for _ in range(1000000):
+            with lock:  # Acquire lock before modifying shared data
+                counter += 1
+
+    t1 = threading.Thread(target=increment)
+    t2 = threading.Thread(target=increment)
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+
+    print("Final Counter:", counter)  # Expected: 2000000
+    ✅ Ensures safe access to shared data by allowing only one thread to modify counter at a time.
+
+2. Reentrant Lock (threading.RLock)
+    A reentrant lock (RLock) allows the same thread to acquire the lock multiple times without deadlocking itself.
+
+    When to Use RLock?
+    When a function holding a lock calls another function that also needs the same lock.
+    Example: Nested Locking
+
+    import threading
+
+    rlock = threading.RLock()
+
+    def task1():
+        with rlock:
+            print("Task 1 acquired lock")
+            task2()  # Calls another function that also needs the lock
+            print("Task 1 releasing lock")
+
+    def task2():
+        with rlock:
+            print("Task 2 acquired lock")
+            print("Task 2 releasing lock")
+
+    t = threading.Thread(target=task1)
+    t.start()
+    t.join()
+    ✅ Allows multiple acquisitions by the same thread without blocking itself.
+
+3. Read-Write Locks (threading.Condition or ReaderWriterLock from readerwriterlock)
+    A Read-Write Lock allows multiple threads to read concurrently but ensures only one thread can write at a time.
+
+    Using readerwriterlock.ReaderWriterLock
+    The readerwriterlock library provides a proper Read-Write lock.
+
+    Installation:
+    pip install readerwriterlock
+    Example: Read-Write Lock
+
+
+    from readerwriterlock import rwlock
+    import threading
+    import time
+
+    lock = rwlock.RWLockFair()
+    shared_data = 0
+
+    def reader(id):
+        with lock.gen_rlock():
+            print(f"Reader {id} is reading value: {shared_data}")
+            time.sleep(1)
+
+    def writer(id):
+        global shared_data
+        with lock.gen_wlock():
+            print(f"Writer {id} is writing...")
+            shared_data += 1
+            time.sleep(1)
+
+    threads = []
+    for i in range(3):  # Multiple readers
+        t = threading.Thread(target=reader, args=(i,))
+        threads.append(t)
+
+    for i in range(2):  # Multiple writers
+        t = threading.Thread(target=writer, args=(i,))
+        threads.append(t)
+
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    ✅ Readers can read simultaneously, but only one writer can modify the shared resource at a time.
+
+4. Semaphore (threading.Semaphore)
+    A semaphore allows a limited number of threads to access a resource at the same time.
+
+    Example: Limiting Concurrent Access
+
+    import threading
+    import time
+
+    semaphore = threading.Semaphore(2)  # Only 2 threads can access at the same time
+
+    def worker(id):
+        with semaphore:
+            print(f"Thread {id} is working")
+            time.sleep(2)
+            print(f"Thread {id} finished")
+
+    threads = [threading.Thread(target=worker, args=(i,)) for i in range(5)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    ✅ Useful for limiting access to database connections, network resources, etc.
+
+5. Condition Variables (threading.Condition)
+    A condition variable allows threads to wait until a condition is met.
+
+    Example: Producer-Consumer Problem
+
+    import threading
+    import time
+
+    condition = threading.Condition()
+    queue = []
+
+    def producer():
+        global queue
+        for i in range(5):
+            with condition:
+                queue.append(i)
+                print(f"Produced: {i}")
+                condition.notify()  # Notify consumers
+                time.sleep(1)
+
+    def consumer():
+        global queue
+        for _ in range(5):
+            with condition:
+                while not queue:
+                    condition.wait()  # Wait until producer adds an item
+                item = queue.pop(0)
+                print(f"Consumed: {item}")
+
+    t1 = threading.Thread(target=producer)
+    t2 = threading.Thread(target=consumer)
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+    ✅ Consumers wait until items are produced, preventing busy-waiting.
+
+Summary Table
+    Lock Type	Purpose	Allows Reentrant Locking?	Use Case
+    Lock	Prevents race conditions	❌ No	Basic mutual exclusion
+    RLock	Prevents self-deadlock	✅ Yes	Nested function calls with locks
+    Semaphore	Limits concurrent access	❌ No	Resource pooling (e.g., DB connections)
+    Condition	Synchronizes threads based on events	❌ No	Producer-consumer problems
+    ReaderWriterLock	Allows multiple readers but one writer	❌ No	Efficient read-heavy workloads
+    Let me know if you need more details on any of these! 🚀
