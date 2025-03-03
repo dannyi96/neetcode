@@ -1,0 +1,88 @@
+In Python, you can spawn threads and processes using the threading and multiprocessing modules. Here's a breakdown:
+
+1. Spawning Threads (threading module)
+    Threads share memory space and are lightweight but limited by Python's Global Interpreter Lock (GIL), meaning they can't run CPU-bound tasks efficiently.
+
+    Example: Running Multiple Threads
+
+    import threading
+    import time
+
+    def worker(thread_id):
+        print(f"Thread {thread_id} started")
+        time.sleep(2)
+        print(f"Thread {thread_id} finished")
+
+    # Create and start threads
+    threads = []
+    for i in range(3):
+        t = threading.Thread(target=worker, args=(i,))
+        t.start()
+        threads.append(t)
+
+    # Wait for all threads to finish
+    for t in threads:
+        t.join()
+
+    print("All threads completed")
+    ✅ Use threading for I/O-bound tasks (e.g., network requests, file I/O, database queries).
+
+2. Spawning Processes (multiprocessing module)
+    Processes run in separate memory spaces, avoiding GIL limitations. Suitable for CPU-bound tasks.
+
+    Example: Running Multiple Processes
+
+    import multiprocessing
+    import time
+
+    def worker(process_id):
+        print(f"Process {process_id} started")
+        time.sleep(2)
+        print(f"Process {process_id} finished")
+
+    # Create and start processes
+    processes = []
+    for i in range(3):
+        p = multiprocessing.Process(target=worker, args=(i,))
+        p.start()
+        processes.append(p)
+
+    # Wait for all processes to finish
+    for p in processes:
+        p.join()
+
+    print("All processes completed")
+    ✅ Use multiprocessing for CPU-bound tasks (e.g., data processing, mathematical computations).
+
+3. Using ThreadPoolExecutor (concurrent.futures)
+    Easier way to manage multiple threads.
+
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    def task(n):
+        return f"Task {n} completed"
+
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        results = executor.map(task, range(3))
+
+    print(list(results))
+4. Using ProcessPoolExecutor (concurrent.futures)
+    For parallel execution with multiple processes.
+
+
+    from concurrent.futures import ProcessPoolExecutor
+
+    def task(n):
+        return f"Task {n} completed"
+
+    with ProcessPoolExecutor(max_workers=3) as executor:
+        results = executor.map(task, range(3))
+
+    print(list(results))
+5. Difference Between Threads and Processes
+    Feature	Threads (threading)	Processes (multiprocessing)
+    Memory Usage	Shared memory	Separate memory
+    CPU-bound Tasks	❌ Not efficient	✅ Efficient
+    I/O-bound Tasks	✅ Good choice	❌ Overhead
+    GIL Limitation	Affected by GIL	Bypasses GIL
